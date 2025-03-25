@@ -137,5 +137,5 @@ This design ensures that all parameters are easy to manage and update.
 
 #### 3.2. Training
 - Run the main script to start training with cross-validation:
-  ```bash
+  
   python RenalNet_Training.ipynb

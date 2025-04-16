@@ -1,7 +1,7 @@
 <div align="center">
 
   <h1>🩺 RenalNet</h1>
-  <h3>🏆 5th Place – IEEE ESPRIT SB Code To Cure Hackathon 2025</h3>
+  <h3>🏆 1st Place – IEEE ESPRIT SB Code To Cure Hackathon 2025</h3>
   <p>A deep learning solution to detect renal failure from kidney ultrasound images.</p>
 
   <p>

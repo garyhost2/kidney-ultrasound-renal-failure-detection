@@ -1,108 +1,132 @@
-# 🧪 RenalNet
-[![LinkedIn\][linkedin-shield\]](https://www.linkedin.com/in/yassine-ben-zekri-72aa6b199/) [![LinkedIn\][linkedin-shield\]](https://www.linkedin.com/in/oumayma-bejaoui-8a6398235/) [![LinkedIn\][linkedin-shield\]](https://www.linkedin.com/in/rami-gharbi)
+<div align="center">
 
----
+  <h1>🩺 RenalNet</h1>
+  <h3>🏆 5th Place – IEEE ESPRIT SB Code To Cure Hackathon 2025</h3>
+  <p>A deep learning solution to detect renal failure from kidney ultrasound images.</p>
 
----
+  <p>
+    👤 <a href="https://www.linkedin.com/in/yassine-ben-zekri-72aa6b199/">Yassine Ben Zekri</a> •
+    👤 <a href="https://www.linkedin.com/in/oumayma-bejaoui-8a6398235/">Oumayma Bejaoui</a> •
+    👤 <a href="https://www.linkedin.com/in/rami-gharbi">Rami Gharbi</a>
+  </p>
 
-## 🔍 Overview
+  <img src="./assets/logo.png" alt="RenalNet Logo" width="180" />
 
-**RenalNet** is an end-to-end machine learning solution designed to predict renal failure from ultrasound images. It uses deep learning techniques, attention mechanisms, and data augmentation strategies to create a clinically-relevant prediction system, tailored to African healthcare data (e.g., Cameroon Health System).
+</div>
 
-**Key Goals:**
+<hr/>
 
-- Predict renal failure using ultrasound images.
-- Assist clinicians in remote or resource-limited regions.
-- Lay the foundation for a future mobile kidney health monitoring tool.
+<h2>🌐 Overview</h2>
 
----
+<p><strong>RenalNet</strong> is a clinical AI pipeline that classifies ultrasound kidney images to assess renal failure probability.
+It combines modern CNN architectures, attention mechanisms, strong augmentations, and ensemble learning to improve robustness in real-world healthcare settings.</p>
 
-## 🔄 Pipeline Summary
+<h3>🎯 Goals:</h3>
+<ul>
+  <li>Predict renal failure using ultrasound imagery.</li>
+  <li>Assist diagnosis in low-resource environments.</li>
+  <li>Enable future mobile kidney health monitoring tools.</li>
+</ul>
 
-```mermaid
+<hr/>
+
+<h2>🔁 Pipeline Overview</h2>
+
+<pre>
 graph TD
-  A[Input CSV + Ultrasound Images] --> B[UltrasoundDataset Class (Grayscale)]
+  A[Input: CSV + Ultrasound Images] --> B[UltrasoundDataset (Grayscale)]
   B --> C[Albumentations Augmentation]
-  C --> D[Model: tf_mobilenetv3_small_075]
-  D --> E[Attention Layer + SpectralNorm Head]
-  E --> F[Focal Loss + AdamW Optimizer]
-  F --> G[Repeated Stratified K-Fold Training]
-  G --> H[Test-Time Augmentation (TTA)]
-  H --> I[Ensemble Averaging]
-  I --> J[Submission CSV]
-```
+  C --> D[MobileNetV3 Backbone + Custom Attention Head]
+  D --> E[Training with Mixup, Cutmix, Focal Loss]
+  E --> F[K-Fold Cross-Validation + EarlyStopping]
+  F --> G[Test Time Augmentation (TTA)]
+  G --> H[Final Ensemble Prediction]
+  H --> I[Submission CSV Generation]
+</pre>
 
----
+<hr/>
 
-## 🌐 Components
+<h2>⚙️ Architecture & Components</h2>
 
-### 1. Configuration (`CFG` class)
+<h3>🧩 1. Configuration</h3>
+<ul>
+  <li><code>CFG</code> class defines seed, device, paths, batch size, augmentations, and model hyperparameters.</li>
+</ul>
 
-- Controls seed, device (CPU/GPU), data paths, and hyperparameters.
-- Allows flexible tuning of augmentations, losses, and optimizer settings.
+<h3>🧩 2. Dataset & Augmentation</h3>
+<ul>
+  <li>Custom PyTorch dataset to load grayscale ultrasound images.</li>
+  <li>Albumentations used for:
+    <ul>
+      <li>✳️ Training: Resize, flip, elastic distortions, contrast, dropout.</li>
+      <li>🔍 Testing: Resize + normalization.</li>
+    </ul>
+  </li>
+</ul>
 
-### 2. Dataset & Augmentations
+<h3>🧩 3. Model</h3>
+<ul>
+  <li>Backbone: <code>tf_mobilenetv3_small_075</code> (via <code>timm</code>)</li>
+  <li>Enhanced with:
+    <ul>
+      <li>✅ Attention mechanism</li>
+      <li>✅ Spectral Normalization</li>
+      <li>✅ Dropout for regularization</li>
+    </ul>
+  </li>
+</ul>
 
-- **UltrasoundDataset**: Loads grayscale images + applies transformations.
-- **Albumentations**:
-  - *Train*: Resize, flips, elastic distortions, brightness/contrast, CoarseDropout.
-  - *Test*: Resize + normalization.
+<h3>🧩 4. Training Strategy</h3>
+<ul>
+  <li>Augmentations: Mixup + Cutmix applied randomly per epoch.</li>
+  <li>Loss: FocalLoss</li>
+  <li>Optimizer: AdamW</li>
+  <li>LR Scheduler: Reduce on Plateau (AUC-based)</li>
+  <li>EarlyStopping enabled</li>
+</ul>
 
-### 3. Model Architecture
+<h3>🧩 5. Evaluation</h3>
+<ul>
+  <li><code>RepeatedStratifiedKFold</code> ensures class balance</li>
+  <li>TTA for robust inference</li>
+  <li>Ensemble average across folds + augmentations</li>
+</ul>
 
-- Pretrained **MobileNetV3-Small (timm)**
-- **Grayscale adaptation** + **sigmoid-based attention layer**
-- Final linear layer with spectral normalization & dropout.
+<hr/>
 
-### 4. Data Augmentation Techniques
+<h2>🚀 Quickstart</h2>
 
-- **Mixup** & **Cutmix** (applied randomly during training)
-- **Focal Loss** to emphasize hard-to-classify samples
+<pre>
+# Step 1 — Data Preparation
+Place ultrasound images and CSV files:
+Train.csv | Test.csv | images/
 
-### 5. Training
-
-- **Optimizer**: AdamW with different learning rates for head/backbone
-- **Scheduler**: Validation AUC-based LR scheduler
-- **EarlyStopping** based on plateaued AUC
-
-### 6. Cross-Validation & Ensemble
-
-- **RepeatedStratifiedKFold** ensures class balance in splits
-- **TTA** averages predictions across multiple augmented versions
-- **Final Prediction** = mean across folds + TTA outputs
-
----
-
-## 🔍 Innovations
-
-- **Attention Mechanism** for feature focus
-- **SpectralNorm** for stabilized training
-- **Heavy Augmentation** improves generalization
-- **Focal Loss** addresses class imbalance effectively
-- **K-Fold + TTA + Ensemble** = highly robust predictions
-
----
-
-## 🚀 How to Run
-
-### 1. Prepare Data
-
-- Place ultrasound images & `Train.csv`, `Test.csv` in paths defined in `CFG`
-
-### 2. Train the Model
-
-```bash
+# Step 2 — Train the Model
 python RenalNet_Training.ipynb
-```
 
-### 3. Generate Submission
-
-```bash
+# Step 3 — Inference
 python Inference_with_TTA.py
-```
+</pre>
 
----
+<hr/>
 
-**Hackathon**: IEEE ESPRIT SB - *Code To Cure 2025*\
-**Team**: Yassine Ben Zekri, Oumayma Bejaoui, Rami Gharbi
+<h2>💡 Key Innovations</h2>
+<ul>
+  <li>🔍 Attention mechanism to focus on salient regions</li>
+  <li>🧼 SpectralNorm stabilizes training</li>
+  <li>🔁 Strong data augmentation with Cutmix + Mixup</li>
+  <li>⚖️ FocalLoss handles class imbalance</li>
+  <li>🔬 K-Fold with TTA improves generalization</li>
+</ul>
 
+<hr/>
+
+<h2>📸 Pipeline Image</h2>
+
+<p><img href="https://i.postimg.cc/02pTMvPd/Chat-GPT-Image-Apr-16-2025-08-05-32-PM.png" width="600" /></p>
+
+<hr/>
+
+<div align="center">
+  <strong>Built with ❤️ by the RenalNet Team at IEEE ESPRIT SB</strong>
+</div>

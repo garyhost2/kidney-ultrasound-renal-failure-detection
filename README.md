@@ -123,7 +123,7 @@ python Inference_with_TTA.py
 
 <h2>📸 Pipeline Image</h2>
 
-<p><img href="https://i.postimg.cc/02pTMvPd/Chat-GPT-Image-Apr-16-2025-08-05-32-PM.png" width="600" /></p>
+<p><img src="https://i.postimg.cc/02pTMvPd/Chat-GPT-Image-Apr-16-2025-08-05-32-PM.png" width="600" /></p>
 
 <hr/>
 

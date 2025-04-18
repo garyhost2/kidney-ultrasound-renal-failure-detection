@@ -128,5 +128,5 @@ python Inference_with_TTA.py
 <hr/>
 
 <div align="center">
-  <strong>Built with ❤️ by the RenalNet Team at IEEE ESPRIT SB</strong>
+  <strong>Built with ❤️ by 20 mars Team at c2c IEEE Zindi hackathon </strong>
 </div>

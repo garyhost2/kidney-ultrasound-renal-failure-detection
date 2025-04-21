@@ -10,7 +10,7 @@
     👤 <a href="https://www.linkedin.com/in/rami-gharbi">Rami Gharbi</a>
   </p>
 
-  <img src="https://i.postimg.cc/WpmnHwS9/81b3f5a4-6cd4-468a-b92e-23a40f8b2a96.jpg" alt="RenalNet Logo" width="180" />
+  <img src="https://i.postimg.cc/WpmnHwS9/81b3f5a4-6cd4-468a-b92e-23a40f8b2a96.jpg" alt="RenalNet Logo" width="240" />
 
 </div>
 
